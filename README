@@ -3,8 +3,8 @@ Including Mac, Linux.
 
 Files
 ------
-.nanorc, 	nanorcs
-.emacs.el, 	Emacs
+.nanorc		, 	nanorcs
+.emacs.el	, 	Emacs
 .zshrc
-.bashrc
-rc.lua,		awesomes
+.bashrc		,	.bash_profile
+rc.lua		,	awesomes
