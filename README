@@ -1,0 +1,10 @@
+This is a project to store all the profiles I used under *nix.
+Including Mac, Linux.
+
+Files
+------
+.nanorc, 	nanorcs
+.emacs.el, 	Emacs
+.zshrc
+.bashrc
+rc.lua,		awesomes
