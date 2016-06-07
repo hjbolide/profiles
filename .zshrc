@@ -1,7 +1,6 @@
 #PATH settings
-export HOME=/home/charles
-export PATH=$PATH:.:$HOME/comp9021/scripts:$HOME/Apps
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/comp9021/lib
+export HOME=/home/chuang
+export PATH=$PATH:.:$HOME/apps
 #color{{{
 autoload colors zsh/terminfo
 if [[ "$terminfo[colors]" -ge 8 ]]; then
@@ -18,14 +17,14 @@ FINISH="%{$terminfo[sgr0]%}"
 #命令提示符 {{{
 precmd () {
 local count_db_wth_char=${#${${(%):-%/}//[[:ascii:]]/}}
-local leftsize=${#${(%):-%M%/}}+$count_db_wth_char
+local leftsize=${#${(%):-%~ %/}}+$count_db_wth_char
 local rightsize=${#${(%):-%D %T }}
 HBAR=" -"
 
 FILLBAR="\${(l.(($COLUMNS - ($leftsize + $rightsize +2)))..${HBAR}.)}"
 
 RPROMPT=$(echo "%(?..$RED%?$FINISH)")
-PROMPT=$(echo "$BLUE%M$GREEN%/ $WHITE${(e)FILLBAR} $MAGENTA%D %T$FINISH
+PROMPT=$(echo "$BLUE%M $GREEN%~ $WHITE${(e)FILLBAR} $MAGENTA%D %T$FINISH
 $CYAN%n $_YELLOW>>>$FINISH ")
 
 #在 Emacs终端 中使用 Zsh 的一些设置
@@ -244,7 +243,7 @@ zle -N user-complete
 bindkey "\t" user-complete
 
 #显示 path-directories ，避免候选项唯一时直接选中
-cdpath="/home"
+cdpath=$HOME
 #}}}
 
 ##在命令前插入 sudo {{{
@@ -270,11 +269,7 @@ alias -g ll='ls -l'
 alias -g grep='grep --color=auto'
 alias -g egrep='egrep --color'
 alias -g history='history -fi'
-alias -g Eterm='Eterm -e screen'
-alias -g uxterm='uxterm -bg black -fg white +sb -geometry 80x24 -fa DejaVuSansMono -fs 10'
 alias -g nano='nano -w'
-alias -g chua313='ssh chua313@cse.unsw.edu.au'
-alias -g ftpcse='ftp ftp.cse.unsw.edu.au'
 
 #locale of console
 if [ -z $DISPLAY ];
@@ -294,9 +289,9 @@ alias top10='print -l  ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
 
 #路径别名 {{{
 #进入相应的路径时只要 cd ~xxx
-hash -d winc="/mnt/winc"
-hash -d wind="/mnt/wind"
-hash -d wine="/mnt/wine"
+# hash -d winc="/mnt/winc"
+# hash -d wind="/mnt/wind"
+# hash -d wine="/mnt/wine"
 #}}}
     
 #{{{自定义补全
@@ -307,8 +302,8 @@ zstyle ':completion:*:ping:*' hosts 192.168.128.1{38,} http://www.g.cn \
 #补全 ssh scp sftp 等
 my_accounts=(
 {r00t,root}@{192.168.1.1,192.168.0.1}
-kardinal@linuxtoy.org
-123@211.148.131.7
+# kardinal@linuxtoy.org
+# 123@211.148.131.7
 )
 zstyle ':completion:*:my-accounts' users-hosts $my_accounts
 
