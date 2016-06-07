@@ -27,6 +27,17 @@ RPROMPT=$(echo "%(?..$RED%?$FINISH)")
 PROMPT=$(echo "$BLUE%M $GREEN%~ $WHITE${(e)FILLBAR} $MAGENTA%D %T$FINISH
 $CYAN%n $_YELLOW>>>$FINISH ")
 
+GPG_TTY=$(tty)
+export GPG_TTY
+
+export JAVA_HOME=/opt/jdk1.8.0_40
+export PATH=$HOME/.cabal/bin:$HOME/apps/scripts:$JAVA_HOME/bin:$PATH
+export WORKON_HOME=$HOME/.virtualenvs
+export VIRTUALENVWRAPPER_SCRIPT=/usr/local/bin/virtualenvwrapper.sh
+source /usr/local/bin/virtualenvwrapper_lazy.sh
+
+alias em='emacsclient -n'
+
 #在 Emacs终端 中使用 Zsh 的一些设置
 if [[ "$TERM" == "dumb" ]]; then
 setopt No_zle
@@ -323,6 +334,72 @@ function timeconv { date -d @$1 +"%Y-%m-%d %T" }
 
 # }}}
 
+gitup () {
+    echo "Running git fetch"
+    git fetch
+    DIRTY=$([[ $(git diff --shortstat 2> /dev/null | tail -n1) != "" ]] && echo true)
+    if [ "$DIRTY" = true ]; then
+        echo $fg_bold[red] Local is dirty
+        return -1
+    fi
+    for file in `git status --porcelain 2>/dev/null | awk '{print $1"|"$2;}'`; do
+        if ! echo $file | grep "^??" > /dev/null 2>&1; then
+            echo $fg_bold[green] New change: `echo $file | sed -e 's;^[^|][^|]*|\(.*\);\1;'`
+            DIRTY=true; continue
+          elif ! echo $file | egrep "(var/)|(TAGS)|(\.tern-project)|(.*?test\.sh)|(.*?nose-ch\.cfg)|(\.projectile)|(\.tern-port)" > /dev/null 2>&1; then
+            echo $fg_bold[red] Untracked change: `echo $file | sed -e 's;^[^|][^|]*|\(.*\);\1;'`
+            DIRTY=true; break
+        fi
+        echo $fg[cyan] Ignored change: `echo $file | sed -e 's;^[^|][^|]*|\(.*\);\1;'`
+    done
+
+    if [ "$DIRTY" = true ]; then
+        echo
+        echo $fg_bold[red] Local is dirty
+        return -1
+    fi
+
+    LOCAL=$(git rev-parse @)
+    REMOTE=$(git rev-parse @{u})
+    BASE=$(git merge-base @ @{u})
+
+    if [ $LOCAL = $REMOTE ]; then
+        echo $fg_bold[green] Local is up-to-date
+    elif [ $LOCAL = $BASE ]; then
+        echo $fg_bold[yellow] Need to run a pull
+        git pull -r
+        echo
+        need_to_make=0
+        for file in `git log -p --reverse --no-merges --stat --name-status @{1}.. | cat | egrep '^(A|M|D)\s+.+$' | awk '{print $1 "-|-" $2;}'`; do
+            if [[ $file =~ '^ *A' ]]; then
+                printf $fg_bold[cyan]
+            elif [[ $file =~ '^ *M' ]]; then
+                printf $fg_bold[yellow]
+            elif [[ $file =~ '^ *D' ]]; then
+                printf $fg_bold[grey]
+            fi
+
+            if [[ $file =~ '(idl|xml)' ]]; then
+                need_to_make=1;
+            fi
+            echo $file
+        done
+        echo
+
+        if [ $need_to_make -eq 1 ]; then
+            echo $fg_bold[red] Need to run a make
+        else
+            echo $fg_bold[green] Restart the site
+        fi
+    elif [ $REMOTE = $BASE ]; then
+        echo $fg_bold[red] Local is dirty
+    else
+        echo $bg[red] $fg[white] Divergent!
+    fi
+}
+
+# others
+source $HOME/.zshrc.xplan
 
 ## END OF FILE #################################################################
 # vim:filetype=zsh foldmethod=marker autoindent expandtab shiftwidth=4
