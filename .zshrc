@@ -399,7 +399,11 @@ gitup () {
 }
 
 # others
-source $HOME/.zshrc.xplan
+if [[ -d $HOME/.zsh ]]; then
+    for file in $HOME/.zsh/*; do
+        source $file
+    done
+fi
 
 ## END OF FILE #################################################################
 # vim:filetype=zsh foldmethod=marker autoindent expandtab shiftwidth=4
