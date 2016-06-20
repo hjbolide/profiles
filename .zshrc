@@ -1,7 +1,9 @@
-#PATH settings
+# {{{ PATH settings
 export HOME=/home/chuang
 export PATH=$PATH:.:$HOME/apps
-#color{{{
+#}}}
+
+# {{{ color
 autoload colors zsh/terminfo
 if [[ "$terminfo[colors]" -ge 8 ]]; then
 colors
@@ -93,28 +95,28 @@ setopt PUSHD_IGNORE_DUPS
 #每个目录使用独立的历史纪录{{{
 HISTDIR="$HOME/.zhistory"
     [[ ! -d "$HISTDIR" ]] && mkdir -p "$HISTDIR"
-HISTFILE="$HISTDIR/${PWD//\//:}"
-chpwd() {
+#HISTFILE="$HISTDIR/${PWD//\//:}"
+#chpwd() {
 #   fc -W                                       # write current history  file
 #   "setopt INC_APPEND_HISTORY"
-    HISTFILE="$HISTDIR/${PWD//\//:}"            # set new history file
-    [[ ! -e "$HISTFILE" ]] && touch $HISTFILE
-    local ohistsize=$HISTSIZE
-        HISTSIZE=0                              # Discard previous dir's history
-        HISTSIZE=$ohistsize                     # Prepare for new dir's history
-    fc -R                                       # read from current histfile
-}
+#    HISTFILE="$HISTDIR/${PWD//\//:}"            # set new history file
+#    [[ ! -e "$HISTFILE" ]] && touch $HISTFILE
+#    local ohistsize=$HISTSIZE
+#        HISTSIZE=0                              # Discard previous dir's history
+#        HISTSIZE=$ohistsize                     # Prepare for new dir's history
+#    fc -R                                       # read from current histfile
+#}
 
-function allhistory { cat $HISTDIR/* }                                   #*/
-function convhistory {
-            sort $1 | sed 's/^:\([ 0-9]*\):[0-9]*;\(.*\)/\1::::::\2/' |
-            awk -F"::::::" '{ $1=strftime("%Y-%m-%d %T",$1) "|"; print }'  
-}
+#function allhistory { cat $HISTDIR/* }                                   #*/
+#function convhistory {
+#            sort $1 | sed 's/^:\([ 0-9]*\):[0-9]*;\(.*\)/\1::::::\2/' |
+#            awk -F"::::::" '{ $1=strftime("%Y-%m-%d %T",$1) "|"; print }'  
+#}
 #使用 histall 命令查看全部历史纪录
-function histall { convhistory =(allhistory) |
-            sed '/^.\{20\} *cd/i\\' }
+# function histall { convhistory =(allhistory) |
+#           sed '/^.\{20\} *cd/i\\' }
 #使用 hist 查看当前目录历史纪录
-function hist { convhistory $HISTFILE }
+# function hist { convhistory $HISTFILE }
 
 #全部历史纪录 top55
 function top55 { allhistory | awk -F':[ 0-9]*:[0-9]*;' '{ $1="" ; print }' | sed 's/ /\n/g' | sed '/^$/d' | sort | uniq -c | sort -nr | head -n 55 }
@@ -218,7 +220,7 @@ zle_highlight=(region:bg=magenta #选中区域
                isearch:underline)#搜索时使用的关键字
 #}}}
 
-##空行(光标在行首)补全 "cd " {{{
+#空行(光标在行首)补全 "cd " {{{
 user-complete(){
     case $BUFFER in
         "" )                       # 空行填入 "cd "
@@ -268,7 +270,7 @@ zle -N sudo-command-line
 #定义快捷键为： [Esc] [Esc]
 bindkey "\e\e" sudo-command-line
 #}}}
-  
+
 #命令别名 {{{
 alias -g cp='cp -i'
 alias -g mv='mv -i'
@@ -334,6 +336,7 @@ function timeconv { date -d @$1 +"%Y-%m-%d %T" }
 
 # }}}
 
+##{{{ Function Defs
 gitup () {
     echo "Running git fetch"
     git fetch
@@ -397,6 +400,7 @@ gitup () {
         echo $bg[red] $fg[white] Divergent!
     fi
 }
+#}}}
 
 # others
 if [[ -d $HOME/.zsh ]]; then
