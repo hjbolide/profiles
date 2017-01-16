@@ -3,19 +3,9 @@
 ;;  Customised Variables  ;;
 ;;                        ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(setq url-proxy-services
-      '(("no_proxy" . "^\\(localhost\\|10.*\\|*.devel.iress.com.au\\)")
-        ("http" . "sydxplanssh.devel.iress.com.au:3128")
-        ("https" . "sydxplanssh.devel.iress.com.au:3128")))
-
 (modify-all-frames-parameters '((fullscreen . maximized)))
 
-(setenv "http_proxy" "http://sydxplanssh.devel.iress.com.au:3128")
-(setenv "https_proxy" "https://sydxplanssh.devel.iress.com.au:3128")
-
-(setenv "SRC" "/home/chuang/src/xplan/trunk")
-(setenv "HTML" "/home/chuang/src/xplan/trunk/data/ihtml")
-(setenv "JS" "/home/chuang/src/xplan/trunk/data/wwwroot/js")
+;(setenv "SRC" "")
 
 (require 'package)
 (package-initialize)
@@ -28,10 +18,10 @@
 ;;                        ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'tramp)
-(setq tramp-default-method "ssh")
-(setq tramp-default-user "charles.huang"
-      tramp-default-host "sydxplanssh.devel.iress.com.au")
-(whitespace-mode t)
+;(setq tramp-default-method "ssh")
+;(setq tramp-default-user "charles.huang"
+;      tramp-default-host "sydxplanssh.devel.iress.com.au")
+;(whitespace-mode t)
 
 (c-set-offset 'case-label '+)
 
@@ -84,20 +74,20 @@
 ;;;;;;;;;;;;;;;;;;
 (global-set-key (kbd "M-'") 'kill-this-buffer)
 (global-set-key [(C-f4)] 'server-edit)
-(global-set-key (kbd "C-b") 'helm-buffers-list)
+(global-set-key (kbd "C-<tab>") 'ido-switch-buffer)
 (global-set-key (kbd "C-8") 'highlight-symbol-at-point)
 (global-set-key (kbd "C-c <deletechar>") 'git-gutter+-revert-hunk)
 ;; lazy functions
 (global-set-key [(meta p)] 'hippie-expand)
-(global-set-key (kbd "M-o") 'save-buffer)
+(global-set-key (kbd "M-s") 'save-buffer)
 (global-set-key [(C-f3)] 'isearch-repeat-backward)
 (global-set-key '[f3] 'isearch-repeat-forward)
 (global-set-key [(C-f7)] 'git-gutter+-previous-hunk)
 (global-set-key '[f7] 'git-gutter+-next-hunk)
 (global-set-key '[f4] 'jedi:goto-definition)
                                         ;(global-set-key (kbd "M-.") 'helm-etags-select)
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-M-n") 'helm-projectile-find-file-dwim)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-n") 'projectile-find-file-dwim)
 (global-set-key (kbd "ESC <f3>") 'isearch-lazy-highlight-cleanup)
 (global-set-key (kbd "C-M-l") 'delete-trailing-whitespace)
 (global-set-key (kbd "C-M-s") 'tags-apropos)
@@ -132,7 +122,7 @@
  '(cua-mode t nil (cua-base))
  '(custom-safe-themes
    (quote
-    ("33bb2c9b6e965f9c3366c57f8d08a94152954d4e2124dc621953f5a8d7e9ca41" "f1af57ed9c239a5db90a312de03741e703f712355417662c18e3f66787f94cbe" "89e8cc2d402dbf4a723afc2e4983556d0c4f10cd2ddb3aff0e48ed72a22ff2c7" "e80932ca56b0f109f8545576531d3fc79487ca35a9a9693b62bf30d6d08c9aaf" "885ef8634f55df1fa067838330e3aa24d97be9b48c30eadd533fde4972543b55" "1e7e097ec8cb1f8c3a912d7e1e0331caeed49fef6cff220be63bd2a6ba4cc365" default)))
+    ("fad38808e844f1423c68a1888db75adf6586390f5295a03823fa1f4959046f81" "33bb2c9b6e965f9c3366c57f8d08a94152954d4e2124dc621953f5a8d7e9ca41" "f1af57ed9c239a5db90a312de03741e703f712355417662c18e3f66787f94cbe" "89e8cc2d402dbf4a723afc2e4983556d0c4f10cd2ddb3aff0e48ed72a22ff2c7" "e80932ca56b0f109f8545576531d3fc79487ca35a9a9693b62bf30d6d08c9aaf" "885ef8634f55df1fa067838330e3aa24d97be9b48c30eadd533fde4972543b55" "1e7e097ec8cb1f8c3a912d7e1e0331caeed49fef6cff220be63bd2a6ba4cc365" default)))
  '(delete-selection-mode nil)
  '(display-time-mode t)
  '(ecb-layout-name "ultimate")
@@ -148,16 +138,13 @@
  '(global-whitespace-mode t)
  '(grep-command "grep -InH ")
  '(grep-window-height 13)
- '(helm-boring-buffer-regexp-list
-   (quote
-    ("\\` " "\\*helm" "\\*helm-mode" "\\*Echo Area" "\\*Minibuf" "\\*Completions" "\\*Compile-Log" "\\*Backtrace" "\\*Packages" "\\*Custom" "*\\.pyc")))
- '(helm-ff-auto-update-initial-value t)
- '(helm-ff-skip-boring-files t)
- '(helm-mode t)
  '(indent-tabs-mode nil)
  '(js2-indent-switch-body t)
  '(ldap-host-parameters-alist nil)
  '(mark-even-if-inactive t)
+ '(package-selected-packages
+   (quote
+    (yascroll yafolding web-mode ubuntu-theme typescript-mode tumble tabbar-ruler soap-client smex rustfmt rust-mode realgud python-mode neotree magit js2-refactor jedi ido-yes-or-no ido-ubiquitous ido-grid-mode idea-darkula-theme git-gutter+ flymake-python-pyflakes flycheck-pyflakes flx-ido flappymacs django-mode darcula-theme csv-mode autopair)))
  '(scroll-bar-mode (quote right))
  '(semantic-mode t)
  '(show-trailing-whitespace t)
@@ -193,7 +180,7 @@
  '(ecb-default-highlight-face ((t (:background "indian red" :foreground "black"))) t)
  '(fringe ((t nil)))
  '(tabbar-button ((t (:inherit tabbar-default))))
- '(tabbar-default ((t (:foreground "grey75" :height 0.8 :family "ubuntu-mono"))))
+ '(tabbar-default ((t (:foreground "grey75" :height 0.8 :family "Monaco"))))
  '(tabbar-highlight ((t (:underline t))))
  '(tabbar-selected ((t nil)))
  '(vertical-border ((t (:inherit mode-line-inactive))))
@@ -202,49 +189,6 @@
  '(whitespace-tab ((t nil))))
 
 (setq isearch-lazy-highlight t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-;;                     ;;
-;;  ibuffer mode       ;;
-;;                     ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;
-;(require 'ibuf-ext)
-;(setq ibuffer-expert t)
-;(setq ibuffer-show-empty-filter-groups nil)
-;(setq ibuffer-saved-filter-groups
-;      (quote (("home"
-;               ("PYTHON" (mode . python-mode))
-;               ("JAVASCRIPT" (mode . javascript-mode))
-;               ("HTML" (mode . html-mode))
-;               ("CSS" (mode . css-mode))
-;               ("Help" (or (name . "\*Help\*")
-;                           (name . "\*Apropos\*")
-;                           (name . "\*info\*")
-;                           (name . "\*Messages\*")
-;                           (name . "\*Completions\*")
-;                           (name . "\*scratch\*")))))))
-;(add-hook 'ibuffer-mode-hook
-;          '(lambda ()
-;             (ibuffer-auto-mode 1)
-;             (ibuffer-switch-to-saved-filter-groups "home")))
-;; Use human readable Size column instead of original one
-;(define-ibuffer-column size-h
-;  (:name "Size" :inline t)
-;  (cond
-;   ((> (buffer-size) 1000) (format "%7.3fk" (/ (buffer-size) 1000.0)))
-;   ((> (buffer-size) 1000000) (format "%7.3fM" (/ (buffer-size) 1000000.0)))
-;   (t (format "%8d" (buffer-size)))))
-
-;; Modify the default ibuffer-formats
-;(setq ibuffer-formats
-;      '((mark modified read-only " "
-;              (name 18 18 :left :elide)
-;              " "
-;              (size-h 9 -1 :right)
-;              " "
-;              (mode 16 16 :left :elide)
-;              " "
-;              filename-and-process)))
 
 ;;;;;;;;;;;;
 ;;        ;;
@@ -268,7 +212,6 @@
 (mouse-avoidance-mode 'animate)
 (setq mouse-yank-at-point t)
 (setq x-select-enable-clipboard t)
-;(setq frame-title-format "Dhuh")
 
 (transient-mark-mode t)
 (setq resize-mini-windows t)
@@ -310,10 +253,9 @@
 (global-auto-revert-mode 1)
 
 (load-theme 'darcula)
-(setq default-frame-alist '((font . "ubuntu mono-12")))
-(set-default-font "ubuntu mono-12")
+(setq default-frame-alist '((font . "Monaco-9")))
+(set-default-font "Monaco-9")
 (setq scroll-preserve-screen-position t)
-(setq helm-ff-auto-update-initial-value t)
 (autopair-mode 1)
 
 (defun save-all ()
@@ -326,6 +268,7 @@
 (scroll-bar-mode -1)
 (yascroll-bar-mode t)
 (yas-global-mode t)
+(projectile-mode t)
 
 
 ;;MAGIT
@@ -337,12 +280,14 @@
     arguments))
 (advice-add 'magit-key-mode :filter-args #'magit-key-mode--add-default-options)
 
-;;HELM
-(helm-mode t)
-(setq helm-M-x-fuzzy-match t)
-(setq helm-apropos-fuzzy-match t)
-(setq helm-buffers-fuzzy-matching t)
-(setq helm-recentf-fuzzy-match t)
+
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
+(setq ido-use-filename-at-point 'guess)
+(setq ido-create-new-buffer 'always)
+(ido-ubiquitous-mode 1)
+
 
 (add-to-list 'auto-mode-alist '("\\.ejs\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.hbs\\'" . web-mode))
