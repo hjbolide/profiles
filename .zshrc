@@ -1,8 +1,3 @@
-# {{{ PATH settings
-export HOME=/home/chuang
-export PATH=$PATH:.:$HOME/apps
-#}}}
-
 # {{{ color
 autoload colors zsh/terminfo
 if [[ "$terminfo[colors]" -ge 8 ]]; then
@@ -16,8 +11,6 @@ done
 FINISH="%{$terminfo[sgr0]%}"
 #}}}
 
-#命令提示符 {{{
-precmd () {
 local count_db_wth_char=${#${${(%):-%/}//[[:ascii:]]/}}
 local leftsize=${#${(%):-%~ %/}}+$count_db_wth_char
 local rightsize=${#${(%):-%D %T }}
@@ -28,27 +21,6 @@ FILLBAR="\${(l.(($COLUMNS - ($leftsize + $rightsize +2)))..${HBAR}.)}"
 RPROMPT=$(echo "%(?..$RED%?$FINISH)")
 PROMPT=$(echo "$BLUE%M $GREEN%~ $WHITE${(e)FILLBAR} $MAGENTA%D %T$FINISH
 $CYAN%n $_YELLOW>>>$FINISH ")
-
-GPG_TTY=$(tty)
-export GPG_TTY
-
-export JAVA_HOME=/opt/jdk1.8.0_40
-export PATH=$HOME/.cabal/bin:$HOME/apps/scripts:$JAVA_HOME/bin:$PATH
-export WORKON_HOME=$HOME/.virtualenvs
-export VIRTUALENVWRAPPER_SCRIPT=/usr/local/bin/virtualenvwrapper.sh
-source /usr/local/bin/virtualenvwrapper_lazy.sh
-
-alias em='emacsclient -n'
-
-#在 Emacs终端 中使用 Zsh 的一些设置
-if [[ "$TERM" == "dumb" ]]; then
-setopt No_zle
-PROMPT='%n@%M %/
->>'
-alias ls='ls -F'
-fi    
-}
-#}}}
 
 #chpwd{{{
 chpwd() {
@@ -118,11 +90,6 @@ HISTDIR="$HOME/.zhistory"
 #使用 hist 查看当前目录历史纪录
 # function hist { convhistory $HISTFILE }
 
-#全部历史纪录 top55
-function top55 { allhistory | awk -F':[ 0-9]*:[0-9]*;' '{ $1="" ; print }' | sed 's/ /\n/g' | sed '/^$/d' | sort | uniq -c | sort -nr | head -n 55 }
-
-#}}}
-
 #杂项 {{{
 #允许在交互模式中使用注释  例如：
 #cmd #这是注释
@@ -133,7 +100,6 @@ setopt INTERACTIVE_COMMENTS
 #setopt AUTO_CD
       
 #扩展路径
-#/v/c/p/p => /var/cache/pacman/pkg
 setopt complete_in_word
 
 #禁用 core dumps
@@ -180,7 +146,7 @@ zstyle ':completion:*' squeeze-slashes 'yes'
 zstyle ':completion::complete:*' '\\'
 
 #彩色补全菜单 
-eval $(dircolors -b) 
+# eval $(dircolors -b) 
 export ZLSCOLORS="${LS_COLORS}"
 zmodload zsh/complist
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
@@ -259,18 +225,6 @@ bindkey "\t" user-complete
 cdpath=$HOME
 #}}}
 
-##在命令前插入 sudo {{{
-#定义功能 
-sudo-command-line() {
-    [[ -z $BUFFER ]] && zle up-history
-    [[ $BUFFER != sudo\ * ]] && BUFFER="sudo $BUFFER"
-    zle end-of-line                 #光标移动到行末
-}
-zle -N sudo-command-line
-#定义快捷键为： [Esc] [Esc]
-bindkey "\e\e" sudo-command-line
-#}}}
-
 #命令别名 {{{
 alias -g cp='cp -i'
 alias -g mv='mv -i'
@@ -284,21 +238,10 @@ alias -g egrep='egrep --color'
 alias -g history='history -fi'
 alias -g nano='nano -w'
 
-#locale of console
-if [ -z $DISPLAY ];
-then
-export LC_ALL=C
-else
-export LC_ALL=en_US.UTF-8
-fi
 
 #[Esc][h] man 当前命令时，显示简短说明 
 alias run-help >&/dev/null && unalias run-help
 autoload run-help
-
-#历史命令 top10
-alias top10='print -l  ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
-#}}}
 
 #路径别名 {{{
 #进入相应的路径时只要 cd ~xxx
@@ -311,14 +254,6 @@ alias top10='print -l  ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
 #补全 ping
 zstyle ':completion:*:ping:*' hosts 192.168.128.1{38,} http://www.g.cn \
        192.168.{1,0}.1{{7..9},}
-
-#补全 ssh scp sftp 等
-my_accounts=(
-{r00t,root}@{192.168.1.1,192.168.0.1}
-# kardinal@linuxtoy.org
-# 123@211.148.131.7
-)
-zstyle ':completion:*:my-accounts' users-hosts $my_accounts
 
 #}}}
 
@@ -408,6 +343,15 @@ if [[ -d $HOME/.zsh ]]; then
         source $file
     done
 fi
+
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+export JAVA_HOME=$HOME/dev/amazon-corretto-11.jdk/Contents/Home
+export PATH=$PATH:$HOME/dev:$JAVA_HOME/bin
 
 ## END OF FILE #################################################################
 # vim:filetype=zsh foldmethod=marker autoindent expandtab shiftwidth=4
